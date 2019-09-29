@@ -4,7 +4,8 @@ const path = require('path')
 const cp = require('child_process')
 
 const paths = {
-  project: process.cwd()
+  project: process.cwd(),
+  package: path.resolve(paths.project, 'package.json')
 }
 
 cp.spawnSync('cp', [
@@ -33,3 +34,26 @@ cp.spawnSync('cp', [
   path.resolve(paths.project, '.prettierrc.js')
 ])
 console.log('Updated .prettierrc')
+
+// package.json
+const package = require(paths.package)
+
+// add watch:dev to package.json
+if (!package.scripts['watch:dev']) {
+  package.scripts = {
+    ...package.scripts,
+    'start:dev': 'ts-node index.ts'
+  }
+  fs.writeFileSync(paths.package, JSON.stringify(package, null, 2))
+  console.log('Implement `start:dev`')
+}
+
+// add watch:dev to package.json
+if (!package.scripts['watch:dev']) {
+  package.scripts = {
+    ...package.scripts,
+    'watch:dev': 'nodemon --watch . -e ts --exec npm run start:dev'
+  }
+  fs.writeFileSync(paths.package, JSON.stringify(package, null, 2))
+  console.log('Implement `watch:dev`')
+}
