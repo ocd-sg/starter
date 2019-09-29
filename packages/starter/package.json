@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "@ocd-ui/config": "^0.2.5",
     "prettier": "^1.18.2",
     "tslint": "^5.20.0",
