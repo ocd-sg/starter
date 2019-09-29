@@ -5,7 +5,7 @@ const cp = require('child_process')
 
 const paths = {
   project: process.cwd(),
-  package: path.resolve(paths.project, 'package.json')
+  package: path.resolve(process.cwd(), 'package.json')
 }
 
 cp.spawnSync('cp', [
