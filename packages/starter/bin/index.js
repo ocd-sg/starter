@@ -5,34 +5,35 @@ const cp = require('child_process')
 
 const paths = {
   project: process.cwd(),
-  package: path.resolve(process.cwd(), 'package.json')
+  package: path.resolve(process.cwd(), 'package.json'),
+  templates: {
+    git: path.resolve(__dirname, '../templates/git'),
+    typescript: path.resolve(__dirname, '../templates/typescript'),
+    prettier: path.resolve(__dirname, '../templates/prettier')
+
+  }
 }
 
-cp.spawnSync('cp', [
-  require.resolve('@ocd-ui/config/git/gitignore'),
+copy(
+  path.resolve(paths.templates.git, 'gitignore'),
   path.resolve(paths.project, '.gitignore')
-])
+)
 console.log('Updated .gitignore')
 
-// cp.spawnSync('cp', [
-//   require.resolve('@ocd-ui/config/typescript/tslint.json'),
-//   paths.project
-// ])
-
-// remove react from tslint
-const tslint = require('@ocd-ui/config/typescript/tslint.json')
-tslint.extends = tslint.extends.filter((d) => d !== 'tslint-react')
-cp.spawnSync('cp', [
-  require.resolve('@ocd-ui/config/typescript/tsconfig.json'),
-  paths.project
-])
-fs.writeFileSync(path.resolve(paths.project, 'tslint.json'), JSON.stringify(tslint, null, 2))
+copy(
+  path.resolve(paths.templates.typescript, 'tsconfig.json'),
+  path.resolve(paths.project, 'tsconfig.json')
+)
+copy(
+  path.resolve(paths.templates.typescript, 'tslint.json'),
+  path.resolve(paths.project, 'tslint.json')
+)
 console.log('Updated typescript files')
 
-cp.spawnSync('cp', [
-  require.resolve('@ocd-ui/config/prettier/prettierrc.js'),
+copy(
+  path.resolve(paths.templates.prettier, 'prettierrc.js'),
   path.resolve(paths.project, '.prettierrc.js')
-])
+)
 console.log('Updated .prettierrc')
 
 // package.json
@@ -45,7 +46,7 @@ if (!package.scripts['watch:dev']) {
     'start:dev': 'ts-node index.ts'
   }
   fs.writeFileSync(paths.package, JSON.stringify(package, null, 2))
-  console.log('Implement `start:dev`')
+  console.log('Add script `start:dev`')
 }
 
 // add watch:dev to package.json
@@ -55,5 +56,9 @@ if (!package.scripts['watch:dev']) {
     'watch:dev': 'nodemon --watch . -e ts --exec npm run start:dev'
   }
   fs.writeFileSync(paths.package, JSON.stringify(package, null, 2))
-  console.log('Implement `watch:dev`')
+  console.log('Add script `watch:dev`')
+}
+
+function copy (source, destination) {
+  return fs.writeFileSync(destination, fs.readFileSync(source))
 }
