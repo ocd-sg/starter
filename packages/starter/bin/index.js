@@ -10,7 +10,6 @@ const paths = {
     git: path.resolve(__dirname, '../templates/git'),
     typescript: path.resolve(__dirname, '../templates/typescript'),
     prettier: path.resolve(__dirname, '../templates/prettier')
-
   }
 }
 
@@ -31,10 +30,10 @@ copy(
 console.log('Updated typescript files')
 
 copy(
-  path.resolve(paths.templates.prettier, 'prettierrc.js'),
-  path.resolve(paths.project, '.prettierrc.js')
+  path.resolve(paths.templates.prettier, 'prettier.config.js'),
+  path.resolve(paths.project, 'prettier.config.js')
 )
-console.log('Updated .prettierrc')
+console.log('Updated prettier.config.js')
 
 // package.json
 const package = require(paths.package)
@@ -59,6 +58,6 @@ if (!package.scripts['watch:dev']) {
   console.log('Add script `watch:dev`')
 }
 
-function copy (source, destination) {
+function copy(source, destination) {
   return fs.writeFileSync(destination, fs.readFileSync(source))
 }
